@@ -11,11 +11,11 @@ module.exports = {
       networkId: '*',
     },
     man: {
-        network_id: 1,
-        gas: 1000000,
-        gasPrice: 40*1000000000,
-        provider: function () { return new HDWalletProvider('', 'http://server10.jy.mcarlo.com:8645'); },
-        networkCheckTimeout: 30000,
+      network_id: 1,
+      gas: 2000000,
+      gasPrice: 28*1000000000,
+      provider: function () { return new HDWalletProvider('', 'http://server10.jy.mcarlo.com:8645'); },
+      networkCheckTimeout: 30000,
     }
   },
 };

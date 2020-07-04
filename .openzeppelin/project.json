@@ -1,8 +1,7 @@
 {
   "manifestVersion": "2.2",
   "contracts": {
-    "MCB": "MCB",
-    "TokenVesting": "TokenVesting"
+    "MCB": "MCB"
   },
   "dependencies": {},
   "name": "mcb",
@@ -10,7 +9,7 @@
   "compiler": {
     "compilerSettings": {
       "optimizer": {
-        "enabled": false,
+        "enabled": true,
         "runs": "200"
       }
     },
