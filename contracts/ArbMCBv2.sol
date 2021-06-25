@@ -8,6 +8,15 @@ import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 
 import {IArbSys, IArbToken} from "./IArbitrum.sol";
 
+/**
+ * @dev An empty MCB token without mint
+ */
+contract ArbMCBv1 is ERC20Upgradeable {
+    function init() public initializer {
+        __ERC20_init("MCDEX Token", "MCB");
+    }
+}
+
 abstract contract L2ArbitrumMessenger {
     address internal constant arbSysAddr = address(100);
 
@@ -33,11 +42,12 @@ abstract contract L2ArbitrumMessenger {
     }
 }
 
+/**
+ * @dev MCB token v2
+ */
 contract ArbMCBv2 is
-    Initializable,
-    ContextUpgradeable,
-    AccessControlUpgradeable,
     ERC20Upgradeable,
+    AccessControlUpgradeable,
     L2ArbitrumMessenger,
     IArbToken
 {
@@ -57,17 +67,13 @@ contract ArbMCBv2 is
         uint256 amount
     );
 
-    function initialize(
-        string memory name_,
-        string memory symbol_,
+    function migrateToArb(
         address gateway_,
         address l1Token_,
         uint256 tokenSupplyOnL1_
-    ) external initializer {
-        __Context_init_unchained();
+    ) external {
         __AccessControl_init_unchained();
-        __ERC20_init_unchained(name_, symbol_);
-
+        
         __ArbMCBv2_init_unchained(gateway_, l1Token_, tokenSupplyOnL1_);
     }
 
@@ -78,7 +84,10 @@ contract ArbMCBv2 is
         address gateway_,
         address l1Token_,
         uint256 tokenSupplyOnL1_
-    ) internal initializer {
+    ) internal {
+        require(gateway == address(0), "already migrated");
+        require(l1Token == address(0), "already migrated");
+        require(tokenSupplyOnL1 == 0, "already migrated");
         require(gateway_.isContract(), "gateway must be contract");
         require(l1Token_ != address(0), "l1Token must be non-zero address");
 

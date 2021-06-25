@@ -3,7 +3,7 @@ pragma solidity 0.6.10;
 
 import "@openzeppelin/contracts-ethereum-package/contracts/presets/ERC20PresetMinterPauser.sol";
 
-import {ITokenGateway, IInbox, IBridge, IOutbox} from "./IArbitrum.sol";
+import {IInbox, IBridge, IOutbox} from "./IArbitrum.sol";
 
 import {MCB} from "./MCB.sol";
 
@@ -41,10 +41,9 @@ contract EthMCBv2 is MCB {
         uint256 maxGas,
         uint256 gasPriceBid
     ) external payable {
-        require(
-            inbox == 0x0000000000000000000000000000000000000000,
-            "already migrated"
-        );
+        require(inbox == address(0), "already migrated");
+        require(gateway == address(0), "already migrated");
+        require(l2Token == address(0), "already migrated");
         require(gateway_.isContract(), "gateway must be contract");
         require(gatewayRouter_.isContract(), "gatewayRouter must be contract");
         require(l2Token_ != address(0), "l1Token must be non-zero address");
