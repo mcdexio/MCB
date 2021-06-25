@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0 <0.8.0;
 
-interface ITokenGateway {
-    function router() external view returns (address);
-}
-
 interface IInbox {
     function bridge() external view returns (IBridge);
 }
@@ -18,12 +14,6 @@ interface IOutbox {
 }
 
 interface IArbSys {
-    /**
-     * @notice Get internal version number identifying an ArbOS build
-     * @return version number as int
-     */
-    function arbOSVersion() external pure returns (uint256);
-
     /**
      * @notice Get Arbitrum block number (distinct from L1 block number; Arbitrum genesis block has block number 0)
      * @return block number as int

@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 import {IArbSys, IArbToken} from "./IArbitrum.sol";
 
 abstract contract L2ArbitrumMessenger {
-    address internal constant arbsysAddr = address(100);
+    address internal constant arbSysAddr = address(100);
 
     event TxToL1(
         address indexed _from,
@@ -24,7 +24,7 @@ abstract contract L2ArbitrumMessenger {
         address _to,
         bytes memory _data
     ) internal virtual returns (uint256) {
-        uint256 _id = IArbSys(arbsysAddr).sendTxToL1{value: _l1CallValue}(
+        uint256 _id = IArbSys(arbSysAddr).sendTxToL1{value: _l1CallValue}(
             _to,
             _data
         );
