@@ -34,6 +34,7 @@ contract EthMCBv2 is MCB {
 
     function migrateToArb(
         address gateway_,
+        address gatewayRouter_,
         address l2Token_,
         uint256 maxSubmissionCost1,
         uint256 maxSubmissionCost2,
@@ -45,6 +46,7 @@ contract EthMCBv2 is MCB {
             "already migrated"
         );
         require(gateway_.isContract(), "gateway must be contract");
+        require(gatewayRouter_.isContract(), "gatewayRouter must be contract");
         require(l2Token_ != address(0), "l1Token must be non-zero address");
 
         gateway = gateway_;
@@ -88,7 +90,7 @@ contract EthMCBv2 is MCB {
                 maxSubmissionCost2
             );
             _functionCallWithValue(
-                ITokenGateway(gateway).router(),
+                gatewayRouter_,
                 functionCallData,
                 gas2,
                 "call setGateway failed"
