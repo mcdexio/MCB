@@ -1,0 +1,32 @@
+{
+  "networks": {
+    "mainnet": {
+      "proxies": {
+        "mcb/MCB": [
+          {
+            "address": "0x4e352cF164E64ADCBad318C3a1e222E9EBa4Ce42",
+            "version": "1.0.0",
+            "implementation": "0x1021b725C8C10DC6240c9f1F151095d798906D3c",
+            "admin": "0xD18019DbD648F9c2794Dd3F130ad7490f7F3c173",
+            "kind": "Upgradeable"
+          }
+        ]
+      }
+    }
+  },
+  "compiler": {
+    "compilerSettings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": "200"
+      }
+    },
+    "typechain": {
+      "enabled": false
+    },
+    "manager": "openzeppelin",
+    "artifactsDir": "build/contracts",
+    "contractsDir": "contracts",
+    "solcVersion": "0.6.10"
+  }
+}
