@@ -7,12 +7,9 @@ const OZ_SDK_EXPORT = require("../openzeppelin-cli-export.json");
 
 
 const EnvConfigs = {
-    mainnet: {
-        l1Token: OZ_SDK_EXPORT.OZ_SDK_EXPORT.networks.mainnet.proxies["mcb/MCB"],
-        // l2CustomGateway: ""
-    },
     arb: {
-
+        l1Token: "0x4e352cf164e64adcbad318c3a1e222e9eba4ce42",
+        l2CustomGateway: "0x096760F208390250649E3e8763348E783AEF5562",
     },
     arbrinkeby: {
         l1Token: "0x01B019DCdfc39C537b1143c79a31B4733bD4C985",
@@ -23,17 +20,10 @@ const EnvConfigs = {
 async function main() {
     const env = EnvConfigs[network.name]
 
-    const ethMCBv2 = await ethers.getContractAt("IERC20", env.l1Token)
-    const ethTotalSupply = await ethMCBv2.totalSupply()
+    const ethTotalSupply = '2193176548671886899345095'
 
     const ArbMCBv2 = await ethers.getContractFactory("ArbMCBv2");
-    const arbMCBv2 = await upgrades.deployProxy(ArbMCBv2, [
-        "MCB", // name
-        "MCB", // symbol
-        env.l2CustomGateway, // l2 gateway
-        env.l1Token, // l1 counterparty
-        ethTotalSupply // l1 totalSupply
-    ]);
+    const arbMCBv2 = await upgrades.deployProxy(ArbMCBv2);
     await arbMCBv2.deployed();
     console.log("ArbMCBv2 deployed to:", arbMCBv2.address);
 }
