@@ -72,8 +72,6 @@ contract ArbMCBv2 is
         address l1Token_,
         uint256 tokenSupplyOnL1_
     ) external {
-        __AccessControl_init_unchained();
-        
         __ArbMCBv2_init_unchained(gateway_, l1Token_, tokenSupplyOnL1_);
     }
 
