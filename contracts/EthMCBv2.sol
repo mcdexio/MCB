@@ -63,8 +63,12 @@ contract EthMCBv2 is MCB {
                 gasPriceBid,
                 maxSubmissionCost1
             );
-            (bool success, ) = gateway.call{value: gas1}(functionCallData);
-            require(success, "call registerTokenToL2 failed");
+            _functionCallWithValue(
+                gateway,
+                functionCallData,
+                gas1,
+                "call registerTokenToL2 failed"
+            );
             emit RegisterTokenOnL2(
                 gateway,
                 l2Token,
@@ -83,10 +87,12 @@ contract EthMCBv2 is MCB {
                 gasPriceBid,
                 maxSubmissionCost2
             );
-            (bool success, ) = ITokenGateway(gateway).router().call{
-                value: gas2
-            }(functionCallData);
-            require(success, "call setGateway failed");
+            _functionCallWithValue(
+                ITokenGateway(gateway).router(),
+                functionCallData,
+                gas2,
+                "call setGateway failed"
+            );
             emit SetGateway(gateway, maxGas, gasPriceBid, maxSubmissionCost2);
         }
     }
@@ -111,6 +117,47 @@ contract EthMCBv2 is MCB {
 
     function proposal19() public virtual override {
         revert("removed");
+    }
+
+    function _functionCallWithValue(
+        address target,
+        bytes memory data,
+        uint256 value,
+        string memory errorMessage
+    ) internal returns (bytes memory) {
+        require(
+            address(this).balance >= value,
+            "insufficient balance for call"
+        );
+        require(target.isContract(), "call to non-contract");
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, bytes memory returndata) = target.call{value: value}(
+            data
+        );
+        return _verifyCallResult(success, returndata, errorMessage);
+    }
+
+    function _verifyCallResult(
+        bool success,
+        bytes memory returndata,
+        string memory errorMessage
+    ) private pure returns (bytes memory) {
+        if (success) {
+            return returndata;
+        } else {
+            // Look for revert reason and bubble it up if present
+            if (returndata.length > 0) {
+                // The easiest way to bubble the revert reason is using memory via assembly
+                // solhint-disable-next-line no-inline-assembly
+                assembly {
+                    let returndata_size := mload(returndata)
+                    revert(add(32, returndata), returndata_size)
+                }
+            } else {
+                revert(errorMessage);
+            }
+        }
     }
 
     uint256[50] private __gap;
