@@ -71,6 +71,9 @@ contract ArbMCBv2 is
         __ArbMCBv2_init_unchained(gateway_, l1Token_, tokenSupplyOnL1_);
     }
 
+    /**
+     * @dev initialze addresses && roles
+     */
     function __ArbMCBv2_init_unchained(
         address gateway_,
         address l1Token_,
