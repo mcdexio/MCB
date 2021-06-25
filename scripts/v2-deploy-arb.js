@@ -23,9 +23,12 @@ async function main() {
     const ethTotalSupply = '2193176548671886899345095'
 
     const ArbMCBv2 = await ethers.getContractFactory("ArbMCBv2");
-    const arbMCBv2 = await upgrades.deployProxy(ArbMCBv2);
-    await arbMCBv2.deployed();
-    console.log("ArbMCBv2 deployed to:", arbMCBv2.address);
+    // const arbMCBv2 = await upgrades.deployProxy(ArbMCBv2);
+    // await arbMCBv2.deployed();
+    // console.log("ArbMCBv2 deployed to:", arbMCBv2.address);
+
+    const upgraded = await upgrades.upgradeProxy('0xCb0A409271468A77Ed497455f895D47B48022740', ArbMCBv2);
+    console.log("ArbMCBv2 upgraded to:", upgraded.address);
 }
 
 main().then(() => process.exit(0))
