@@ -3,6 +3,7 @@ pragma solidity 0.7.4;
 
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 
@@ -51,6 +52,7 @@ contract ArbMCBv2 is
     L2ArbitrumMessenger,
     IArbToken
 {
+    using SafeMath for uint256;
     using AddressUpgradeable for address;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -110,6 +112,11 @@ contract ArbMCBv2 is
         override
         onlyGateway
     {
+        // transfer from l1:
+        // tokenSupplyOnL1 -= amount
+        // totalSupllyOnL2 += amount
+        // globalSupply stay unchanged
+        tokenSupplyOnL1 = tokenSupplyOnL1.sub(amount);
         _mint(account, amount);
         emit BridgeMint(account, amount);
     }
@@ -122,6 +129,11 @@ contract ArbMCBv2 is
         override
         onlyGateway
     {
+        // transfer to l1:
+        // tokenSupplyOnL1 += amount
+        // totalSupllyOnL2 -= amount
+        // globalSupply stay unchanged
+        tokenSupplyOnL1 = tokenSupplyOnL1.add(amount);
         _burn(account, amount);
         emit BridgeBurn(account, amount);
     }
@@ -141,6 +153,10 @@ contract ArbMCBv2 is
             hasRole(MINTER_ROLE, _msgSender()),
             "must have minter role to mint"
         );
+        // transfer to l1:
+        // tokenSupplyOnL1 stay unchanged
+        // totalSupllyOnL2 += amount
+        // globalSupply += amount
         _mint(to, amount);
         // mint to gateway on L1
         uint256 id = sendTxToL1(
