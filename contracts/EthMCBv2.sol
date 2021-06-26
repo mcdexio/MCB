@@ -33,6 +33,7 @@ contract EthMCBv2 is MCB {
     event EscrowMint(address indexed minter, uint256 amount);
 
     function migrateToArb(
+        address inbox_,
         address gateway_,
         address gatewayRouter_,
         address l2Token_,
@@ -44,10 +45,12 @@ contract EthMCBv2 is MCB {
         require(inbox == address(0), "already migrated");
         require(gateway == address(0), "already migrated");
         require(l2Token == address(0), "already migrated");
+        require(inbox_.isContract(), "inbox must be contract");
         require(gateway_.isContract(), "gateway must be contract");
         require(gatewayRouter_.isContract(), "gatewayRouter must be contract");
         require(l2Token_ != address(0), "l1Token must be non-zero address");
 
+        inbox = inbox_;
         gateway = gateway_;
         l2Token = l2Token_;
 
@@ -96,6 +99,11 @@ contract EthMCBv2 is MCB {
             );
             emit SetGateway(gateway, maxGas, gasPriceBid, maxSubmissionCost2);
         }
+    }
+
+    function migrateToArb2(address inbox_) external {
+        require(inbox == address(0), "already migrated");
+        inbox = inbox_;
     }
 
     /**
