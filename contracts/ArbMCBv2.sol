@@ -52,7 +52,7 @@ contract ArbMCBv2 is
     L2ArbitrumMessenger,
     IArbToken
 {
-    using SafeMath for uint256;
+    using SafeMathUpgradeable for uint256;
     using AddressUpgradeable for address;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
