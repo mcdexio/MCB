@@ -1,7 +1,10 @@
 require("@openzeppelin/hardhat-upgrades");
+import "@nomiclabs/hardhat-waffle";
+import "@nomiclabs/hardhat-etherscan";
 
 const pk = process.env["PK"];
 const infuraId = process.env["INFURA_ID"];
+const etherscanApiKey = process.env["ETHERSCAN_API_KEY"];
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -47,5 +50,11 @@ module.exports = {
         },
       },
     ],
+  },
+  etherscan: {
+    apiKey: etherscanApiKey
+  },
+  mocha: {
+    timeout: 60000,
   },
 };
