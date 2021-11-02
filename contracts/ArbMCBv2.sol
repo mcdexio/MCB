@@ -96,10 +96,10 @@ contract ArbMCBv2 is
         tokenSupplyOnL1 = tokenSupplyOnL1_;
 
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
+        // _setupRole(MINTER_ROLE, _msgSender());
     }
 
-    modifier onlyGateway {
+    modifier onlyGateway() {
         require(msg.sender == gateway, "caller must be gateway");
         _;
     }
@@ -143,29 +143,6 @@ contract ArbMCBv2 is
      */
     function l1Address() external view override returns (address) {
         return l1Token;
-    }
-
-    /**
-     * @notice  Mint token on arb (l2), and send a cross-chain tx to mint the same amount token to gateway.
-     */
-    function mint(address to, uint256 amount) public virtual {
-        require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "must have minter role to mint"
-        );
-        // transfer to l1:
-        // tokenSupplyOnL1 stay unchanged
-        // totalSupllyOnL2 += amount
-        // globalSupply += amount
-        _mint(to, amount);
-        // mint to gateway on L1
-        uint256 id = sendTxToL1(
-            0,
-            address(this),
-            l1Token,
-            _getOutboundCalldata(amount)
-        );
-        emit L1EscrowMint(l1Token, id, amount);
     }
 
     function _getOutboundCalldata(uint256 amount)
